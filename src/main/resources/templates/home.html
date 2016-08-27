@@ -1,0 +1,71 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>disk</title>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body style="padding: 10px;">
+<h1>Welcome!</h1>
+<div class=".container">
+    <form hidden="hidden" method="POST" enctype="multipart/form-data" th:action="@{/upload/{parent}(parent=${parent})}">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input type="file" id="fileElem" name="file"/>
+    </form>
+    <button id="fileSelect">上传文件</button>
+    <button onclick="add()">新建文件夹</button>
+    <button onclick="deleteDir()">删除</button>
+
+    <br/><br/>
+    <div th:if="${parent}">
+        <a th:href="@{/id/{id}(id=${grandpa})}">返回上一级</a>&nbsp;|&nbsp;<a href="0">全部文件</a>
+    </div>
+    <div th:unless="${parent}">
+        <label>全部文件</label>
+    </div>
+    <input id="currentParent" type="hidden" th:value="${parent}"/>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th><input id="checkAll" type="checkbox"/>文件名</th>
+            <th>大小</th>
+            <th>修改日期</th>
+        </tr>
+        </thead>
+        <tbody id="fileList">
+
+        <tr id="newDir" hidden="hidden">
+            <td>
+                <input type="checkbox"/>
+                <input id='dirName' type='text' value='新建文件夹' name="name"/>
+                <button onclick="ok()" type="button" class="btn btn-default btn-sm">
+                    <span style="color:green;" class="glyphicon glyphicon-ok"></span>
+                </button>
+                <button onclick="no()" type="button" class="btn btn-default btn-sm">
+                    <span style="color:red;" class="glyphicon glyphicon-remove"></span>
+                </button>
+            </td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr th:each="fileNode : ${fileNodeList}">
+            <td>
+                <input name="subBox" th:value="${fileNode.id}" class="fileNode" type="checkbox"/>
+                <button th:id="${fileNode.id}" style="text-decoration: none;" class="btn btn-link" th:onclick="${fileNode.dir}? 'javascript:enter(event)':'javascript:download(event)'">
+                    <span th:if="${fileNode.dir}" class="glyphicon glyphicon-folder-close"></span>
+                    <span th:unless="${fileNode.dir}" class="glyphicon glyphicon-file"></span>
+                    <span style="margin-left: 5px;" th:text="${fileNode.name}"></span>
+                </button>
+            </td>
+            <td th:text="${fileNode.dir}? '-': ${fileNode.size}"></td>
+            <td th:text="${fileNode.date}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+<script src="http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="../static/js/disk.js" th:src="@{/js/disk.js}"></script>
+</body>
+</html>

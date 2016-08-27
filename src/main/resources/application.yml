@@ -1,0 +1,13 @@
+# Directory where will be saved uploaded files.
+yu:
+ root: uploads
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/disk?useSSL=false
+    username: root
+    password: aaa
+  http:
+    multipart:
+      max-file-size: 100mb
+      max-request-size: 100mb
